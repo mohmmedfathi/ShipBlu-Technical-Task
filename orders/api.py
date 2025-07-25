@@ -36,10 +36,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
 
-        if not user.is_staff and user.role != User.Roles.ADMIN:
-            serializer.validated_data['customer'] = user
-
-        instance = serializer.save()
+        instance = serializer.save(customer=user)
+       
         OrderTrackingEvent.objects.create(
             order=instance,
             status=instance.status,

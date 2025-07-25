@@ -26,6 +26,7 @@ class OrderWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'tracking_number', 'customer', 'status']
+        read_only_fields = ['customer']
 
     def validate(self, data):
         customer = data.get('customer')
