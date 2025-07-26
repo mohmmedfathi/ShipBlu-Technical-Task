@@ -26,21 +26,20 @@ class OrderWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'tracking_number', 'customer', 'status']
-        read_only_fields = ['customer']
+        read_only_fields = ['customer','tracking_number']
 
-    def validate(self, data):
-        customer = data.get('customer')
-        tracking_number = data.get('tracking_number')
+    # def validate(self, data):
+    #     tracking_number = data.get('tracking_number')
 
-        if self.instance is None:
-            if Order.objects.filter(tracking_number=tracking_number).exists():
-                raise serializers.ValidationError({
-                    "tracking_number": (
-                        "This customer already has an order with this tracking number."
-                    )
-                })
+    #     if self.instance is None:
+    #         if Order.objects.filter(tracking_number=tracking_number).exists():
+    #             raise serializers.ValidationError({
+    #                 "tracking_number": (
+    #                     "This customer already has an order with this tracking number."
+    #                 )
+    #             })
 
-        return data
+    #     return data
 
     def validate_status(self, new_status):
         """
