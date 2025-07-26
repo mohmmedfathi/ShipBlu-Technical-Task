@@ -81,6 +81,152 @@ python manage.py runserver
 
 https://documenter.getpostman.com/view/22971205/2sB34oDHyi
 
+### Base URL
+
+http://localhost:8000/api/
+
+All endpoints require:
+```
+Authorization: Bearer <access_token>
+```
+
+## Authentication Endpoints
+
+### Register
+
+**POST** `auth/register/`
+
+Registers a new user.
+
+#### Request Body
+```json
+{
+  "email": "ahmed@gmail.com",
+  "name": "ahmed ahmed",
+  "password": "strongpassword123",
+  "role": "CUSTOMER"
+}
+```
+
+### Obtain Token
+
+**POST** `auth/token/`
+
+#### Request Body
+```json
+{
+  "email": "ahmed@gmail.com",
+  "password": "strongpassword123"
+}
+```
+
+#### Response
+```json
+{
+  "access": "<access_token>",
+  "refresh": "<refresh_token>"
+}
+```
+
+### Refresh Token
+
+**POST** `/token/refresh/`
+
+#### Request Body
+```json
+{
+  "refresh": "<refresh_token>"
+}
+```
+
+### Logout
+
+**POST** `/logout/`
+
+Blacklists a refresh token.
+
+#### Request Body
+```json
+{
+  "refresh": "<refresh_token>"
+}
+```
+
+### Get Current User
+
+**GET** `/me/`
+
+Returns the currently authenticated user’s details.
+
+
+## Orders API Endpoints
+
+### List Orders
+
+**GET** `/orders/`
+
+Optional Query Parameters:
+- `search` — tracking number or customer name
+- `status` — CREATED | PICKED | DELIVERED
+- `customer` — user ID
+
+### Create Order
+
+**POST** `/orders/`
+
+Creates a new order. `customer` and `tracking_number` are set automatically.
+
+#### Request Body
+```json
+{
+  "status": "CREATED"
+}
+```
+
+### Get Order by ID
+
+**GET** `/orders/<id>/`
+
+### Update Order Status
+
+**PUT/PATCH** `/orders/<id>/`
+
+
+#### Request Body
+```json
+{
+  "status": "PICKED"
+}
+```
+**must the status moved in order (CREATED -> PICKED -> DELIVERED) , Ex: if we updated from CREATED to DELIVERED it will return error :**
+
+<img width="920" height="175" alt="Image" src="https://github.com/user-attachments/assets/2ed307e1-b34a-469f-b668-7a52cfdef254" />
+
+### Delete Order (Soft Delete)
+
+**DELETE** `/orders/<id>/`
+
+Soft-deletes the order and adds a tracking event.
+
+## Tracking Events (Nested)
+
+Returned with each order:
+
+```json
+"tracking_events": [
+  {
+    "status": "CREATED",
+    "timestamp": "2025-07-25T18:00:00Z",
+    "comment": "Order created with status 'CREATED'."
+  }
+]
+```
+
+## Roles & Permissions
+
+- Admins can view and edit all orders.
+- Customers can manage only their own.
+
 ## Assumptions-and-Design-Decisions
 **Project Structure**: Organized as a multi-app Django project (users, orders, core) to maintain separation of concerns and scalability.
 
