@@ -25,7 +25,7 @@
 
 ## Overview
 
-A Django REST Framework-based API for managing customer accounts, creating and tracking orders, handling order status transitions, and enforcing business rules. It includes robust user authentication and provides clean, consistent API responses.
+A Django REST Framework-based API for managing customer accounts, creating and tracking orders, handling order status transitions, and enforcing business rules. It includes user authentication and provides consistent API responses.
 
 
 ## Built With
